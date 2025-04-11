@@ -12,10 +12,14 @@ import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import Cart from "./pages/Cart";
 import NotFound from "./pages/NotFound";
+import Products from "./pages/Products";
+import ProductCategory from "./pages/ProductCategory";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 // Admin Pages
 import Dashboard from "./pages/Admin/Dashboard";
-import Products from "./pages/Admin/Products";
+import AdminProducts from "./pages/Admin/Products";
 import ProductForm from "./pages/Admin/ProductForm";
 
 const queryClient = new QueryClient();
@@ -29,14 +33,18 @@ const App = () => (
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Index />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/category/:category" element={<ProductCategory />} />
           <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<Dashboard />} />
-          <Route path="/admin/products" element={<Products />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
           <Route path="/admin/products/new" element={<ProductForm />} />
           <Route path="/admin/products/edit/:id" element={<ProductForm />} />
           
