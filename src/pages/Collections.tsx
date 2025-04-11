@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ const collections = [
     title: 'Gaming Setup Collection',
     description: 'Complete your gaming space with our curated selection of mousepads and posters.',
     image: '/placeholder.svg',
+    category: 'gaming',
     products: ['1', '2', '3', '4'],
   },
   {
@@ -21,6 +22,7 @@ const collections = [
     title: 'Minimalist Workspace',
     description: 'Clean, elegant designs to create a distraction-free environment for focus and productivity.',
     image: '/placeholder.svg',
+    category: 'workspace',
     products: ['3', '5', '7', '9'],
   },
   {
@@ -28,6 +30,7 @@ const collections = [
     title: 'RGB Vibes',
     description: 'Vibrant, colorful designs inspired by the RGB lighting aesthetic popular in gaming setups.',
     image: '/placeholder.svg',
+    category: 'themed',
     products: ['2', '4', '6', '8'],
   },
   {
@@ -35,13 +38,18 @@ const collections = [
     title: 'Retro Gaming',
     description: 'Nostalgic designs celebrating classic games and consoles from the past.',
     image: '/placeholder.svg',
+    category: 'themed',
     products: ['1', '3', '5', '7'],
   }
 ];
 
 const Collections: React.FC = () => {
-  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('all');
+  
+  // Filter collections based on active tab
+  const filteredCollections = activeTab === 'all' 
+    ? collections 
+    : collections.filter(collection => collection.category === activeTab);
   
   return (
     <MainLayout>
@@ -62,31 +70,39 @@ const Collections: React.FC = () => {
           </TabsList>
         </Tabs>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {collections.map((collection) => (
-            <Card key={collection.id} className="overflow-hidden border-0 shadow-lg">
-              <div className="grid grid-cols-1 md:grid-cols-2">
-                <div className="h-64 md:h-full bg-gray-100">
-                  <img 
-                    src={collection.image} 
-                    alt={collection.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-6 flex flex-col justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold mb-2">{collection.title}</h2>
-                    <p className="text-muted-foreground mb-4">{collection.description}</p>
+        {filteredCollections.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in">
+            {filteredCollections.map((collection) => (
+              <Card key={collection.id} className="overflow-hidden border-0 shadow-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                  <div className="h-64 md:h-full bg-gray-100">
+                    <img 
+                      src={collection.image} 
+                      alt={collection.title}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                  <Button className="self-start group">
-                    View Collection
-                    <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </CardContent>
-              </div>
-            </Card>
-          ))}
-        </div>
+                  <CardContent className="p-6 flex flex-col justify-between">
+                    <div>
+                      <h2 className="text-2xl font-bold mb-2">{collection.title}</h2>
+                      <p className="text-muted-foreground mb-4">{collection.description}</p>
+                    </div>
+                    <Link to={`/collections/${collection.id}`}>
+                      <Button className="self-start group">
+                        View Collection
+                        <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p>No collections found in this category.</p>
+          </div>
+        )}
       </div>
     </MainLayout>
   );
