@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import ProductCard from '@/components/products/ProductCard';
 import CategoryCard from '@/components/products/CategoryCard';
 import MainLayout from '@/components/layout/MainLayout';
@@ -179,7 +180,7 @@ const Index: React.FC = () => {
               },
               {
                 title: 'Unique Designs',
-                description: 'Exclusive patterns and artwork you won't find anywhere else.',
+                description: 'Exclusive patterns and artwork you won\'t find anywhere else.',
                 icon: '🎨'
               },
               {
@@ -210,17 +211,17 @@ const Index: React.FC = () => {
               {
                 name: 'Alex Johnson',
                 role: 'Professional Gamer',
-                content: 'The quality of these mousepads is incredible. The smooth surface gives me perfect precision for competitive gaming.',
+                content: 'The quality of these mousepads is incredible. The smooth surface gives me perfect precision for competitive gaming.'
               },
               {
                 name: 'Sarah Zhang',
                 role: 'Graphic Designer',
-                content: 'I love my desk pad! It's spacious, comfortable, and the design adds so much personality to my workspace.',
+                content: 'I love my desk pad! It\'s spacious, comfortable, and the design adds so much personality to my workspace.'
               },
               {
                 name: 'Marcus Reed',
                 role: 'Content Creator',
-                content: 'The posters look even better in person. High quality print that really makes my streaming setup stand out.',
+                content: 'The posters look even better in person. High quality print that really makes my streaming setup stand out.'
               }
             ].map((testimonial, index) => (
               <Card key={index} className="border-0 shadow-lg">
