@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Github, Twitter, LogIn } from "lucide-react";
+import { LogIn, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Login: React.FC = () => {
@@ -52,6 +52,14 @@ const Login: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    toast({
+      title: "Google login",
+      description: "Google authentication would be initiated here.",
+    });
+    // In a real app, we would redirect to Google OAuth
   };
   
   return (
@@ -128,14 +136,10 @@ const Login: React.FC = () => {
                 </div>
               </div>
               
-              <div className="flex gap-2 mt-6">
-                <Button variant="outline" className="w-full">
-                  <Github className="mr-2 h-4 w-4" />
-                  Github
-                </Button>
-                <Button variant="outline" className="w-full">
-                  <Twitter className="mr-2 h-4 w-4" />
-                  Twitter
+              <div className="mt-6">
+                <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+                  <Mail className="mr-2 h-4 w-4" />
+                  Google
                 </Button>
               </div>
             </div>
