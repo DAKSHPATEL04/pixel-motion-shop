@@ -10,10 +10,15 @@ import {
 } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/contexts/CartContext';
 
 const Navbar: React.FC = () => {
   const isMobile = useIsMobile();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { cartItems } = useCart();
+  
+  // Calculate total items in cart
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   
   React.useEffect(() => {
     const handleScroll = () => {
@@ -83,7 +88,7 @@ const Navbar: React.FC = () => {
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag size={20} />
               <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                0
+                {cartItemCount}
               </span>
             </Button>
           </Link>
