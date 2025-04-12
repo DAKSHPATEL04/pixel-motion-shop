@@ -16,7 +16,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import { useCart } from '@/contexts/CartContext';
 
 const Cart: React.FC = () => {
-  const { cartItems, updateQuantity, removeItem, clearCart, getCartTotal } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, clearCart, getCartTotal } = useCart();
   const [promoCode, setPromoCode] = useState('');
   
   const applyPromoCode = () => {
@@ -95,7 +95,7 @@ const Cart: React.FC = () => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => removeItem(item.id)}
+                            onClick={() => removeFromCart(item.id)}
                             className="text-red-500 hover:text-red-600 hover:bg-red-50"
                           >
                             <Trash2 className="h-4 w-4 mr-1" />
