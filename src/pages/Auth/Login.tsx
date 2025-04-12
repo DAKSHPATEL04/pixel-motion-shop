@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { LogIn, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -22,26 +23,39 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login, isAuthenticated } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/account');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
-      // In a real app, we'd send this to an API
       console.log('Login attempt:', { email, password });
       
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const success = await login(email, password);
       
-      // Mock successful login
-      toast({
-        title: "Login successful",
-        description: "Welcome back!",
-      });
-      
-      // Redirect to account page
-      navigate('/account');
+      if (success) {
+        toast({
+          title: "Login successful",
+          description: "Welcome back!",
+        });
+        
+        // Redirect to account page
+        navigate('/account');
+      } else {
+        toast({
+          title: "Login failed",
+          description: "Invalid email or password. Please try again.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.error('Login error:', error);
       toast({

@@ -1,7 +1,6 @@
 
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,24 +12,33 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserRound, Package, Heart, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 
 const Account = () => {
   const navigate = useNavigate();
-  const isLoggedIn = false; // This would be based on your authentication context
+  const { user, isAuthenticated, logout } = useAuth();
+  const { toast } = useToast();
   
   // Redirect to login if not logged in
-  React.useEffect(() => {
-    if (!isLoggedIn) {
+  useEffect(() => {
+    if (!isAuthenticated) {
       navigate('/login');
     }
-  }, [isLoggedIn, navigate]);
+  }, [isAuthenticated, navigate]);
 
-  // Mock user data - in a real app, this would come from your auth provider
-  const userData = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    joined: "April 2025"
+  const handleLogout = () => {
+    logout();
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    navigate('/');
   };
+
+  if (!user) {
+    return null; // Don't render anything while redirecting
+  }
 
   return (
     <MainLayout>
@@ -44,9 +52,9 @@ const Account = () => {
                 <UserRound size={32} />
               </div>
               <div>
-                <CardTitle>{userData.name}</CardTitle>
-                <CardDescription className="mt-1">{userData.email}</CardDescription>
-                <p className="text-xs text-muted-foreground mt-1">Member since {userData.joined}</p>
+                <CardTitle>{user.name}</CardTitle>
+                <CardDescription className="mt-1">{user.email}</CardDescription>
+                <p className="text-xs text-muted-foreground mt-1">Member since {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
               </div>
             </div>
           </CardHeader>
@@ -127,7 +135,7 @@ const Account = () => {
                   </div>
                   
                   <div className="pt-4">
-                    <Button variant="destructive" className="gap-2">
+                    <Button variant="destructive" className="gap-2" onClick={handleLogout}>
                       <LogOut size={16} />
                       Sign Out
                     </Button>
