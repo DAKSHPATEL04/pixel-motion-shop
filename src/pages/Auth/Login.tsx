@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -13,12 +13,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Github, Twitter } from "lucide-react";
+import { Github, Twitter, LogIn } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,10 +34,21 @@ const Login: React.FC = () => {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Redirect to dashboard or homepage
-      // navigate('/');
+      // Mock successful login
+      toast({
+        title: "Login successful",
+        description: "Welcome back!",
+      });
+      
+      // Redirect to account page
+      navigate('/account');
     } catch (error) {
       console.error('Login error:', error);
+      toast({
+        title: "Login failed",
+        description: "Invalid email or password. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -92,7 +106,12 @@ const Login: React.FC = () => {
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Signing in...' : 'Sign in'}
+                  {isLoading ? 'Signing in...' : (
+                    <>
+                      <LogIn className="mr-2 h-4 w-4" />
+                      Sign in
+                    </>
+                  )}
                 </Button>
               </div>
             </form>

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, Menu, X, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { 
@@ -14,6 +14,7 @@ import { useCart } from '@/contexts/CartContext';
 
 const Navbar: React.FC = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const { cartItems } = useCart();
   
@@ -54,6 +55,9 @@ const Navbar: React.FC = () => {
     </ul>
   );
 
+  // Mocked authentication state - in a real app this would come from your auth context
+  const isLoggedIn = false;
+
   return (
     <header 
       className={cn(
@@ -93,11 +97,13 @@ const Navbar: React.FC = () => {
             </Button>
           </Link>
           
-          <Link to="/account">
-            <Button variant="ghost" size="icon">
-              <User size={20} />
-            </Button>
-          </Link>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => navigate(isLoggedIn ? '/account' : '/login')}
+          >
+            <User size={20} />
+          </Button>
 
           {/* Mobile Menu */}
           {isMobile && (

@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -14,7 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Github, Twitter } from "lucide-react";
+import { Github, Twitter, UserPlus } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,8 @@ const Register: React.FC = () => {
     acceptTerms: false,
   });
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -38,12 +41,20 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match");
+      toast({
+        title: "Passwords don't match",
+        description: "Please make sure your passwords match.",
+        variant: "destructive",
+      });
       return;
     }
     
     if (!formData.acceptTerms) {
-      alert("Please accept the terms and conditions");
+      toast({
+        title: "Terms not accepted",
+        description: "Please accept the terms and conditions.",
+        variant: "destructive",
+      });
       return;
     }
     
@@ -56,10 +67,21 @@ const Register: React.FC = () => {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Redirect to login or homepage
-      // navigate('/login');
+      // Mock successful registration
+      toast({
+        title: "Registration successful",
+        description: "Your account has been created. You can now log in.",
+      });
+      
+      // Redirect to login
+      navigate('/login');
     } catch (error) {
       console.error('Registration error:', error);
+      toast({
+        title: "Registration failed",
+        description: "There was an error creating your account.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -155,7 +177,12 @@ const Register: React.FC = () => {
                 </div>
                 
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Creating account...' : 'Create account'}
+                  {isLoading ? 'Creating account...' : (
+                    <>
+                      <UserPlus className="mr-2 h-4 w-4" />
+                      Create account
+                    </>
+                  )}
                 </Button>
               </div>
             </form>
