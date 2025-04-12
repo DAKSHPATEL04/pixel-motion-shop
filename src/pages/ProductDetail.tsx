@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -22,6 +21,7 @@ import {
 } from "@/components/ui/accordion";
 import ProductCard from '@/components/products/ProductCard';
 import MainLayout from '@/components/layout/MainLayout';
+import { useCart } from '@/contexts/CartContext';
 
 // Dummy product data
 const product = {
@@ -74,6 +74,7 @@ const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
   
   // In a real app, we would fetch the product based on ID
   // const { data: product, isLoading, error } = useQuery(['product', id], fetchProduct);
@@ -81,6 +82,16 @@ const ProductDetail: React.FC = () => {
   if (!product) {
     return <div>Product not found</div>;
   }
+
+  const handleAddToCart = () => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      category: product.category
+    }, quantity);
+  };
 
   const handlePrevImage = () => {
     setSelectedImage((prev) => 
@@ -228,7 +239,7 @@ const ProductDetail: React.FC = () => {
               </div>
               
               <div className="flex-1">
-                <Button className="w-full" size="lg">
+                <Button className="w-full" size="lg" onClick={handleAddToCart}>
                   <ShoppingBag className="h-5 w-5 mr-2" />
                   Add to Cart
                 </Button>

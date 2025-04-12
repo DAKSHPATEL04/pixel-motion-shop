@@ -13,44 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import MainLayout from '@/components/layout/MainLayout';
-
-// Dummy cart items
-const initialCartItems = [
-  {
-    id: '1',
-    name: 'Galaxy Desk Pad',
-    price: 29.99,
-    quantity: 1,
-    image: '/placeholder.svg',
-    category: 'mousepads',
-  },
-  {
-    id: '2',
-    name: 'Nebula Gaming Pad XL',
-    price: 39.99,
-    quantity: 2,
-    image: '/placeholder.svg',
-    category: 'mousepads',
-  },
-];
+import { useCart } from '@/contexts/CartContext';
 
 const Cart: React.FC = () => {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const { cartItems, updateQuantity, removeItem, clearCart, getCartTotal } = useCart();
   const [promoCode, setPromoCode] = useState('');
-  
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-  
-  const removeItem = (id: string) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
-  };
   
   const applyPromoCode = () => {
     if (!promoCode) return;
@@ -60,7 +27,7 @@ const Cart: React.FC = () => {
   };
   
   // Calculate cart totals
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = getCartTotal();
   const shipping = subtotal > 50 ? 0 : 5.99;
   const total = subtotal + shipping;
   
@@ -143,7 +110,7 @@ const Cart: React.FC = () => {
                   <Link to="/products">
                     <Button variant="outline">Continue Shopping</Button>
                   </Link>
-                  <Button onClick={() => setCartItems([])}>Clear Cart</Button>
+                  <Button onClick={clearCart}>Clear Cart</Button>
                 </CardFooter>
               </Card>
             </div>

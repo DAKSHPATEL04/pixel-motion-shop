@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useCart } from '@/contexts/CartContext';
 
 interface Product {
   id: string;
@@ -23,6 +23,12 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { addToCart } = useCart();
+  
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation to product detail
+    addToCart(product);
+  };
   
   if (listView) {
     return (
@@ -68,7 +74,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
               </div>
             </div>
             
-            {/* Rating */}
             {product.rating && (
               <div className="flex items-center">
                 <div className="flex">
@@ -92,7 +97,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
           </div>
           
           <div className="flex items-center justify-between mt-4">
-            <Button variant="outline">
+            <Button variant="outline" onClick={handleAddToCart}>
               <ShoppingBag className="h-4 w-4 mr-2" />
               Add to Cart
             </Button>
@@ -120,9 +125,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
       onMouseLeave={() => setIsHovered(false)}
     >
       <Link to={`/products/${product.id}`} className="block aspect-square relative overflow-hidden">
-        {/* Product Image/Video */}
         {product.video && isHovered ? (
-          // Video would replace image on hover if available
           <video
             className="w-full h-full object-cover"
             autoPlay
@@ -143,7 +146,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
           />
         )}
         
-        {/* Wishlist Button */}
         <Button 
           variant="secondary" 
           size="icon" 
@@ -167,7 +169,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
             </div>
           </div>
           
-          {/* Rating */}
           {product.rating && (
             <div className="flex items-center">
               <div className="flex">
@@ -189,8 +190,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
             </div>
           )}
           
-          {/* Add to Cart Button */}
-          <Button className="w-full mt-2" variant="outline">
+          <Button className="w-full mt-2" variant="outline" onClick={handleAddToCart}>
             <ShoppingBag className="h-4 w-4 mr-2" />
             Add to Cart
           </Button>
