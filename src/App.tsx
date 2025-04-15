@@ -1,68 +1,61 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CartProvider } from "./contexts/CartContext";
-import { AuthProvider } from "./contexts/AuthContext";
 
-// Public Pages
-import Index from "./pages/Index";
-import ProductDetail from "./pages/ProductDetail";
-import Login from "./pages/Auth/Login";
-import Register from "./pages/Auth/Register";
-import Account from "./pages/Account";
-import Cart from "./pages/Cart";
-import NotFound from "./pages/NotFound";
-import Products from "./pages/Products";
-import ProductCategory from "./pages/ProductCategory";
-import Collections from "./pages/Collections";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '@/components/theme-provider';
+import { Toaster } from '@/components/ui/toaster';
+import Index from '@/pages/Index';
+import Products from '@/pages/Products';
+import ProductDetail from '@/pages/ProductDetail';
+import ProductCategory from '@/pages/ProductCategory';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import Cart from '@/pages/Cart';
+import NotFound from '@/pages/NotFound';
+import Login from '@/pages/Auth/Login';
+import Register from '@/pages/Auth/Register';
+import Account from '@/pages/Account';
+import Collections from '@/pages/Collections';
+import AdminDashboard from '@/pages/Admin/Dashboard';
+import AdminProducts from '@/pages/Admin/Products';
+import AdminProductForm from '@/pages/Admin/ProductForm';
+import { CartProvider } from './contexts/CartContext';
+import { AuthProvider } from './contexts/AuthContext';
+import { WishlistProvider } from './contexts/WishlistContext';
+import Wishlist from '@/pages/Wishlist';
+import './App.css';
 
-// Admin Pages
-import Dashboard from "./pages/Admin/Dashboard";
-import AdminProducts from "./pages/Admin/Products";
-import ProductForm from "./pages/Admin/ProductForm";
-
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+function App() {
+  return (
+    <ThemeProvider defaultTheme="light" storageKey="ui-theme">
       <AuthProvider>
         <CartProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/products/category/:category" element={<ProductCategory />} />
-              <Route path="/products/:id" element={<ProductDetail />} />
-              <Route path="/collections" element={<Collections />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/cart" element={<Cart />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin" element={<Dashboard />} />
-              <Route path="/admin/products" element={<AdminProducts />} />
-              <Route path="/admin/products/new" element={<ProductForm />} />
-              <Route path="/admin/products/edit/:id" element={<ProductForm />} />
-              
-              {/* 404 Page */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <WishlistProvider>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
+                <Route path="/products/category/:category" element={<ProductCategory />} />
+                <Route path="/collections" element={<Collections />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/products" element={<AdminProducts />} />
+                <Route path="/admin/products/new" element={<AdminProductForm />} />
+                <Route path="/admin/products/edit/:id" element={<AdminProductForm />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+            </Router>
+          </WishlistProvider>
         </CartProvider>
       </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </ThemeProvider>
+  );
+}
 
 export default App;

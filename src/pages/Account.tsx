@@ -25,12 +25,14 @@ import {
   Shield
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from "@/components/ui/separator";
 
 const Account = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { wishlistItems } = useWishlist();
   const { toast } = useToast();
   
   // Redirect to login if not logged in
@@ -134,14 +136,45 @@ const Account = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="text-center py-16 text-muted-foreground">
-                  <Heart className="mx-auto mb-4 size-12 text-muted-foreground/50" />
-                  <p className="mb-2">Your wishlist is empty.</p>
-                  <Button asChild className="mt-4">
-                    <Link to="/products">Discover Products</Link>
-                  </Button>
-                </div>
+                {wishlistItems.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                    {wishlistItems.slice(0, 3).map((item) => (
+                      <Link 
+                        to={`/products/${item.id}`}
+                        key={item.id} 
+                        className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="w-12 h-12 bg-muted rounded flex-shrink-0 overflow-hidden">
+                          <img 
+                            src={item.image} 
+                            alt={item.name} 
+                            className="w-full h-full object-cover" 
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-sm truncate">{item.name}</h4>
+                          <p className="text-sm text-muted-foreground">${item.price.toFixed(2)}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-16 text-muted-foreground">
+                    <Heart className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+                    <p className="mb-2">Your wishlist is empty.</p>
+                    <Button asChild className="mt-4">
+                      <Link to="/products">Discover Products</Link>
+                    </Button>
+                  </div>
+                )}
               </CardContent>
+              {wishlistItems.length > 0 && (
+                <CardFooter className="bg-muted/30 p-4">
+                  <Button asChild variant="outline" className="w-full">
+                    <Link to="/wishlist">View All Wishlist Items</Link>
+                  </Button>
+                </CardFooter>
+              )}
             </Card>
           </TabsContent>
           

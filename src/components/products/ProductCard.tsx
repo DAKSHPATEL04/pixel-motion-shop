@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -5,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ShoppingBag, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 interface Product {
   id: string;
@@ -24,10 +26,22 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) => {
   const [isHovered, setIsHovered] = useState(false);
   const { addToCart } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  
+  const inWishlist = isInWishlist(product.id);
   
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation to product detail
     addToCart(product);
+  };
+  
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation to product detail
+    if (inWishlist) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
   };
   
   if (listView) {
@@ -103,11 +117,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
             </Button>
             
             <Button 
-              variant="secondary" 
+              variant={inWishlist ? "default" : "secondary"}
               size="icon" 
-              className="bg-white/80 hover:bg-white"
+              className={cn(
+                "transition-all",
+                inWishlist 
+                  ? "bg-primary/10 hover:bg-primary/20 text-primary"
+                  : "bg-white/80 hover:bg-white"
+              )}
+              onClick={handleWishlistToggle}
             >
-              <Heart size={18} />
+              <Heart 
+                size={18}
+                className={cn(
+                  "transition-all",
+                  inWishlist && "fill-primary text-primary"
+                )}
+              />
             </Button>
           </div>
         </CardContent>
@@ -147,11 +173,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, listView = false }) 
         )}
         
         <Button 
-          variant="secondary" 
+          variant={inWishlist ? "default" : "secondary"}
           size="icon" 
-          className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-white/80 hover:bg-white"
+          className={cn(
+            "absolute top-3 right-3 opacity-100 transition-all z-10",
+            inWishlist 
+              ? "bg-primary/10 hover:bg-primary/20 text-primary" 
+              : "bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100"
+          )}
+          onClick={handleWishlistToggle}
         >
-          <Heart size={18} />
+          <Heart 
+            size={18} 
+            className={cn(
+              "transition-all",
+              inWishlist && "fill-primary text-primary"
+            )}
+          />
         </Button>
       </Link>
       

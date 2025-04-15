@@ -11,15 +11,18 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 const Navbar: React.FC = () => {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const { cartItems } = useCart();
+  const { wishlistItems } = useWishlist();
   
   // Calculate total items in cart
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const wishlistItemCount = wishlistItems.length;
   
   React.useEffect(() => {
     const handleScroll = () => {
@@ -85,15 +88,22 @@ const Navbar: React.FC = () => {
           <Link to="/wishlist">
             <Button variant="ghost" size="icon" className="relative">
               <Heart size={20} />
+              {wishlistItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlistItemCount}
+                </span>
+              )}
             </Button>
           </Link>
           
           <Link to="/cart">
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingBag size={20} />
-              <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {cartItemCount}
-              </span>
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-accent text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
             </Button>
           </Link>
           
