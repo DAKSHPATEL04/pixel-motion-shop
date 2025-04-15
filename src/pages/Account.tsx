@@ -9,11 +9,24 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserRound, Package, Heart, LogOut } from 'lucide-react';
+import { 
+  UserRound, 
+  Package, 
+  Heart, 
+  LogOut, 
+  Settings, 
+  ShoppingBag, 
+  CreditCard, 
+  Bell,
+  MapPin,
+  Shield
+} from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from "@/components/ui/separator";
 
 const Account = () => {
   const navigate = useNavigate();
@@ -42,18 +55,28 @@ const Account = () => {
 
   return (
     <MainLayout>
-      <div className="container max-w-6xl py-8 md:py-12">
-        <h1 className="text-2xl font-bold mb-6">My Account</h1>
+      <div className="container max-w-6xl py-8 md:py-12 animate-fade-in">
+        <div className="flex flex-col md:flex-row items-start justify-between mb-8 gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold">My Account</h1>
+            <p className="text-muted-foreground mt-1">Manage your account details and preferences</p>
+          </div>
+          <Button variant="outline" className="gap-2 hover:bg-destructive hover:text-destructive-foreground transition-colors" onClick={handleLogout}>
+            <LogOut size={16} />
+            <span>Sign Out</span>
+          </Button>
+        </div>
         
-        <Card className="mb-8">
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-4">
-              <div className="bg-muted h-16 w-16 rounded-full flex items-center justify-center">
-                <UserRound size={32} />
+        <Card className="mb-8 overflow-hidden border-none shadow-lg">
+          <div className="absolute inset-0 bg-gradient-to-r from-accent/30 to-primary/10 opacity-50 z-0"></div>
+          <CardHeader className="pb-3 relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center gap-4">
+              <div className="bg-muted h-20 w-20 rounded-full flex items-center justify-center shadow-md border-2 border-background">
+                <UserRound size={40} className="text-primary" />
               </div>
               <div>
-                <CardTitle>{user.name}</CardTitle>
-                <CardDescription className="mt-1">{user.email}</CardDescription>
+                <CardTitle className="text-2xl md:text-3xl">{user.name}</CardTitle>
+                <CardDescription className="mt-1 text-base">{user.email}</CardDescription>
                 <p className="text-xs text-muted-foreground mt-1">Member since {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
               </div>
             </div>
@@ -61,32 +84,36 @@ const Account = () => {
         </Card>
 
         <Tabs defaultValue="orders" className="w-full">
-          <TabsList className="mb-6 w-full md:w-auto">
-            <TabsTrigger value="orders" className="flex gap-2">
-              <Package size={16} />
-              <span>Orders</span>
+          <TabsList className="mb-6 w-full md:w-auto grid grid-cols-3 md:inline-flex gap-1">
+            <TabsTrigger value="orders" className="flex gap-2 items-center">
+              <ShoppingBag size={16} />
+              <span className="hidden md:inline">Orders</span>
             </TabsTrigger>
-            <TabsTrigger value="wishlist" className="flex gap-2">
+            <TabsTrigger value="wishlist" className="flex gap-2 items-center">
               <Heart size={16} />
-              <span>Wishlist</span>
+              <span className="hidden md:inline">Wishlist</span>
             </TabsTrigger>
-            <TabsTrigger value="settings" className="flex gap-2">
-              <UserRound size={16} />
-              <span>Settings</span>
+            <TabsTrigger value="settings" className="flex gap-2 items-center">
+              <Settings size={16} />
+              <span className="hidden md:inline">Settings</span>
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="orders" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Order History</CardTitle>
+          <TabsContent value="orders" className="mt-0 space-y-6">
+            <Card className="overflow-hidden transition-all hover:shadow-md">
+              <CardHeader className="bg-muted/50">
+                <CardTitle className="flex items-center gap-2">
+                  <Package className="size-5" />
+                  Order History
+                </CardTitle>
                 <CardDescription>
                   View all your previous orders
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>You haven't placed any orders yet.</p>
+              <CardContent className="p-0">
+                <div className="text-center py-16 text-muted-foreground">
+                  <ShoppingBag className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+                  <p className="mb-2">You haven't placed any orders yet.</p>
                   <Button asChild className="mt-4">
                     <Link to="/products">Start Shopping</Link>
                   </Button>
@@ -95,17 +122,21 @@ const Account = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="wishlist" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Your Wishlist</CardTitle>
+          <TabsContent value="wishlist" className="mt-0 space-y-6">
+            <Card className="overflow-hidden transition-all hover:shadow-md">
+              <CardHeader className="bg-muted/50">
+                <CardTitle className="flex items-center gap-2">
+                  <Heart className="size-5" />
+                  Your Wishlist
+                </CardTitle>
                 <CardDescription>
                   Items you've saved for later
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="text-center py-8 text-muted-foreground">
-                  <p>Your wishlist is empty.</p>
+              <CardContent className="p-0">
+                <div className="text-center py-16 text-muted-foreground">
+                  <Heart className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+                  <p className="mb-2">Your wishlist is empty.</p>
                   <Button asChild className="mt-4">
                     <Link to="/products">Discover Products</Link>
                   </Button>
@@ -115,34 +146,123 @@ const Account = () => {
           </TabsContent>
           
           <TabsContent value="settings" className="mt-0">
-            <Card>
-              <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
-                <CardDescription>
-                  Manage your account preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Personal Information</h3>
-                    <Button variant="outline" size="sm">Edit Profile</Button>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card className="transition-all hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <UserRound className="size-5" />
+                    Personal Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Name</span>
+                    <span className="font-medium">{user.name}</span>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-medium">Security</h3>
-                    <Button variant="outline" size="sm">Change Password</Button>
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Email</span>
+                    <span className="font-medium">{user.email}</span>
                   </div>
-                  
-                  <div className="pt-4">
-                    <Button variant="destructive" className="gap-2" onClick={handleLogout}>
-                      <LogOut size={16} />
-                      Sign Out
-                    </Button>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" size="sm" className="w-full">Edit Profile</Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="transition-all hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Shield className="size-5" />
+                    Security
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Password</span>
+                    <span className="font-medium">••••••••</span>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                  <div className="flex justify-between py-2 border-b">
+                    <span className="text-muted-foreground">Two-factor authentication</span>
+                    <span className="text-red-500">Disabled</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" size="sm" className="w-full">Change Password</Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="transition-all hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <MapPin className="size-5" />
+                    Shipping Address
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-4 text-muted-foreground">
+                    <p>No shipping addresses saved yet.</p>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" size="sm" className="w-full">Add Address</Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="transition-all hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <CreditCard className="size-5" />
+                    Payment Methods
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-4 text-muted-foreground">
+                    <p>No payment methods saved yet.</p>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" size="sm" className="w-full">Add Payment Method</Button>
+                </CardFooter>
+              </Card>
+              
+              <Card className="transition-all hover:shadow-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Bell className="size-5" />
+                    Notification Preferences
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span>Email notifications</span>
+                      <Button variant="outline" size="sm">Enable</Button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span>Order updates</span>
+                      <Button variant="outline" size="sm">Enable</Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="transition-all hover:shadow-md md:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-xl text-destructive">
+                    <LogOut className="size-5" />
+                    Sign Out
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-4">
+                    Signing out will remove your session from this device.
+                  </p>
+                  <Button variant="destructive" onClick={handleLogout} className="w-full sm:w-auto">
+                    Sign Out of Your Account
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
