@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Package,
@@ -12,7 +12,8 @@ import {
   LogOut,
   ChevronDown,
   MenuIcon,
-  X
+  X,
+  Home
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useToast } from '@/components/ui/use-toast';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -38,7 +40,19 @@ interface SidebarItem {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  
+  const handleLogout = () => {
+    // In a real app, this would call an authentication service logout method
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    // Navigate to home page after logout
+    navigate('/');
+  };
   
   const sidebarItems: SidebarItem[] = [
     {
@@ -195,7 +209,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
         </div>
         
-        <Button variant="ghost" className="w-full justify-start text-red-500 hover:bg-red-500/10 hover:text-red-500">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start text-red-500 hover:bg-red-500/10 hover:text-red-500"
+          onClick={handleLogout}
+        >
           <LogOut size={20} />
           <span className="ml-3">Log out</span>
         </Button>
@@ -229,9 +247,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           )}
 
           <div className="ml-auto flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-muted-foreground">
-              View Store
-            </Button>
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="text-muted-foreground">
+                <Home size={16} className="mr-2" />
+                View Store
+              </Button>
+            </Link>
             
             <Avatar className="h-8 w-8">
               <AvatarImage src="" />
