@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/components/admin/AdminLayout';
+import { Button } from '@/components/ui/button';
 
 const Dashboard: React.FC = () => {
   return (
@@ -309,5 +310,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-import { Button } from '@/components/ui/button';
 export default Dashboard;
